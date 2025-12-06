@@ -15,7 +15,8 @@ dnf5 install -y tmux
 # Use a COPR Example:
 #
  dnf5 -y copr enable ublue-os/staging
- dnf5 -y install ublue-brew ublue-fastfetch
+ dnf5 -y install ublue-brew
+ dnf5 -y install ublue-fastfetch
 # Disable COPRs so they don't end up enabled on the final image:
  dnf5 -y copr disable ublue-os/staging
 
