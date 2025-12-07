@@ -42,8 +42,8 @@ jobs:
       matrix:
         disk-type: ["qcow2", "anaconda-iso"]
     permissions:
-      contents: read
-      packages: read
+      contents: write
+      packages: write
       id-token: write
 
     steps:
