@@ -64,8 +64,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.MY_USER }}
+          password: ${{ secrets.MY_TOKEN }}
       
       - name: Install dependencies
         if: inputs.platform == 'arm64'
