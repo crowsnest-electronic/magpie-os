@@ -465,7 +465,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ secrets.MY_USER }}
           password: ${{ secrets.MY_TOKEN2 }}
 
       # Sign container
