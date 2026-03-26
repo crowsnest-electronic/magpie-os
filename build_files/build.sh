@@ -19,6 +19,13 @@ dnf5 install -y tmux
 # Disable COPRs so they don't end up enabled on the final image:
 #dnf5 -y copr disable ublue-os/staging
 
+### Disable terra-mesa repo to fix bootc-image-builder ISO generation
+### (packages are already baked into the image, BIB can't read file:// GPG keys)
+if [ -f /etc/yum.repos.d/terra-mesa.repo ]; then
+    sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/terra-mesa.repo
+fi
+
+
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
