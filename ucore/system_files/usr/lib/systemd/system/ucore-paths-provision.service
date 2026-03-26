@@ -1,0 +1,13 @@
+[Unit]
+Description=uCore provision required paths on boot
+DefaultDependencies=no
+After=local-fs.target
+Before=auditd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ucore-paths-provision.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=auditd.service
