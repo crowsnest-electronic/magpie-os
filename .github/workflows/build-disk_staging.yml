@@ -47,6 +47,14 @@ jobs:
       id-token: write
 
     steps:
+      - name: Build and push container image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
+          registry: ghcr.io
+    
       - name: Prepare environment
         run: |
           USER_UID=$(id -u)
