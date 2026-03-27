@@ -13,7 +13,7 @@ on:
         type: string
 
 env:
-  IMAGE_REGISTRY: ghcr.io/crowsnest-electronic
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   # lts uses the stable CoreOS base image but with the longterm kernel
   COREOS_STREAM: ${{ inputs.ucore_stream == 'lts' && 'stable' || inputs.ucore_stream }}
   KERNEL_FLAVOR: ${{ inputs.ucore_stream == 'lts' && 'longterm-6.12' || format('coreos-{0}', inputs.ucore_stream == 'lts' && 'stable' || inputs.ucore_stream) }}
@@ -167,9 +167,9 @@ jobs:
             # pull the base image used for FROM in containerfile so
             # we can retry on that unfortunately common failure case
             podman pull quay.io/fedora/fedora-coreos:${{ env.IMAGE_VERSION }}
-            podman pull ghcr.io/ublue-os/akmods-zfs:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }}
+            podman pull ${{ env.IMAGE_REGISTRY }}/akmods-zfs:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }}
             if [ -n "${{ matrix.nvidia_tag }}" ]; then
-                podman pull ghcr.io/ublue-os/akmods${{ matrix.nvidia_tag }}:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }}
+                podman pull ${{ env.IMAGE_REGISTRY }}/akmods${{ matrix.nvidia_tag }}:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }}
             fi
 
       - name: Verify versions (image, kernel, zfs)
@@ -187,7 +187,7 @@ jobs:
               echo "env.KERNEL_VERSION must not be empty or null" >&2
               exit 1
           fi
-          podman inspect ghcr.io/ublue-os/akmods-zfs:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }} > inspect.json
+          podman inspect ${{ env.IMAGE_REGISTRY }}/akmods-zfs:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }} > inspect.json
           kernel=$(jq -r '.[]["Config"]["Labels"]["ostree.linux"]' inspect.json)
           if [[ "${{ env.KERNEL_VERSION }}" != "$kernel"*  ]]; then
               echo "pulled akmods-zfs image kernel ($kernel) does not match expected kernel (${{ env.KERNEL_VERSION }})" >&2
@@ -199,7 +199,7 @@ jobs:
         shell: bash
         run: |
           set -x
-          podman inspect ghcr.io/ublue-os/akmods${{ matrix.nvidia_tag }}:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }} > inspect.json
+          podman inspect ${{ env.IMAGE_REGISTRY }}/akmods${{ matrix.nvidia_tag }}:${{ env.KERNEL_FLAVOR }}-${{ env.FEDORA_VERSION }}-${{ env.KERNEL_VERSION }} > inspect.json
           kernel=$(jq -r '.[]["Config"]["Labels"]["ostree.linux"]' inspect.json)
           if [[ "${{ env.KERNEL_VERSION }}" != "$kernel"*  ]]; then
               echo "pulled akmods${{ matrix.nvidia_tag }} image kernel ($kernel) does not match expected kernel (${{ env.KERNEL_VERSION }})"
@@ -465,8 +465,8 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
-          username: ${{ secrets.MY_USER }}
-          password: ${{ secrets.MY_TOKEN2 }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # Sign container
       - uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
