@@ -13,7 +13,7 @@ on:
         type: string
 
 env:
-  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  IMAGE_REGISTRY: ghcr.io/ublue-os
   # lts uses the stable CoreOS base image but with the longterm kernel
   COREOS_STREAM: ${{ inputs.ucore_stream == 'lts' && 'stable' || inputs.ucore_stream }}
   KERNEL_FLAVOR: ${{ inputs.ucore_stream == 'lts' && 'longterm-6.12' || format('coreos-{0}', inputs.ucore_stream == 'lts' && 'stable' || inputs.ucore_stream) }}
