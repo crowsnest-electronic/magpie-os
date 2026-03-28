@@ -360,7 +360,7 @@ jobs:
         shell: bash
         run: |
           set -x
-          echo "IMAGE_NAME=ucore${{ matrix.image_suffix }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=magpie-os${{ matrix.image_suffix }}" >> $GITHUB_ENV
           NVIDIA_TAG="${{ matrix.nvidia_tag }}"
           echo "TAG_VERSION=${{ inputs.ucore_stream }}${NVIDIA_TAG%-open}" >> $GITHUB_ENV
 
